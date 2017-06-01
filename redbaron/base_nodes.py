@@ -1830,7 +1830,14 @@ class LineProxyList(ProxyList):
             expected_list[-1].indent = last_indentation
             log("-- current result: %s", ["".join(map(lambda x: x.dumps(), expected_list))])
         else:
-            if isinstance(expected_list[-1], CodeBlockNode):
+            if (
+                isinstance(expected_list[-1], CodeBlockNode) and
+                not (
+                    isinstance(expected_list[-1], redbaron.nodes.DefNode) and
+                    len(expected_list[-1].value) > 0 and
+                    isinstance(expected_list[-1].value[-1], redbaron.nodes.TryNode)
+                )
+            ):
                 # In this case, the last \n is owned by the node
                 log("Last node is a CodeBlockNode, ensure that I still have the same last_indentation")
                 modify_last_indentation(get_real_last(expected_list[-1].value), last_indentation)
