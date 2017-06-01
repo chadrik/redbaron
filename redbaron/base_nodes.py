@@ -1767,7 +1767,8 @@ class LineProxyList(ProxyList):
                     isinstance(previous, redbaron.nodes.DefNode) and
                     len(previous.value) > 0 and
                     isinstance(previous.value[-1], redbaron.nodes.TryNode)
-                )
+                ) and
+                not (isinstance(expected_list[-1], redbaron.nodes.TryNode))
             ):
                 log("Previous is CodeBlockNode and current isn't endl, ensure previous has the current identation")
                 modify_last_indentation(get_real_last(previous.value), indentation)
@@ -1836,7 +1837,8 @@ class LineProxyList(ProxyList):
                     isinstance(expected_list[-1], redbaron.nodes.DefNode) and
                     len(expected_list[-1].value) > 0 and
                     isinstance(expected_list[-1].value[-1], redbaron.nodes.TryNode)
-                )
+                ) and
+                not (isinstance(expected_list[-1], redbaron.nodes.TryNode))
             ):
                 # In this case, the last \n is owned by the node
                 log("Last node is a CodeBlockNode, ensure that I still have the same last_indentation")
