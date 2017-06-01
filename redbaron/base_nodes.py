@@ -1720,9 +1720,14 @@ class LineProxyList(ProxyList):
         for position, i in enumerate(self.data):
             log("[%s] %s", position, i)
 
-            if might_need_separator and i[0].type != "endl" and (
-                        not previous or previous.type != "endl") and not isinstance(previous, (
-                    CodeBlockNode, redbaron.nodes.IfelseblockNode)):
+            if (
+                might_need_separator and
+                i[0].type != "endl" and
+                (not previous or previous.type != "endl") and
+                not isinstance(previous, (CodeBlockNode, redbaron.nodes.IfelseblockNode)) and
+                # Exclude `a = b # inline comment` since otherwise the comment is moved to the next line
+                not (isinstance(previous, redbaron.nodes.AssignmentNode) and isinstance(i[0], redbaron.nodes.CommentNode))
+            ):
                 log(">> Previous line has content and current needs to be indented, append separator to indent it")
                 expected_list.append(generate_separator())
                 log("-- current result: %s", ["".join(map(lambda x: x.dumps(), expected_list))])
