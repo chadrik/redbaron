@@ -1765,8 +1765,8 @@ class LineProxyList(ProxyList):
                 # `except` or `finally` line (whichever comes last) loses its indentation.
                 not (
                     isinstance(previous, redbaron.nodes.DefNode) and
-                    len(previous.value) == 1 and
-                    isinstance(previous.value[0], redbaron.nodes.TryNode)
+                    len(previous.value) > 0 and
+                    isinstance(previous.value[-1], redbaron.nodes.TryNode)
                 )
             ):
                 log("Previous is CodeBlockNode and current isn't endl, ensure previous has the current identation")
