@@ -1750,7 +1750,17 @@ class LineProxyList(ProxyList):
                 log("Previous is endl and current isn't endl and identation isn't correct, fix it")
                 previous.indent = indentation
 
-            if i[0].type != "endl" and previous and isinstance(previous, CodeBlockNode):
+            if (
+                i[0].type != "endl" and
+                previous and isinstance(previous, CodeBlockNode) and
+                # Exclude a function consisting of a single try block, since otherwise the
+                # `except` or `finally` line (whichever comes last) loses its indentation.
+                not (
+                    isinstance(previous, redbaron.nodes.DefNode) and
+                    len(previous.value) == 1 and
+                    isinstance(previous.value[0], redbaron.nodes.TryNode)
+                )
+            ):
                 log("Previous is CodeBlockNode and current isn't endl, ensure previous has the current identation")
                 modify_last_indentation(get_real_last(previous.value), indentation)
 
