@@ -1319,7 +1319,7 @@ class ProxyList(object):
             # XXX this will need refactoring...
             if i[1] is not None:
                 # here we encounter a middle value that should have formatting
-                # to separate between the intems but has not so we add it
+                # to separate between the items but has not so we add it
                 # this happen because a new value has been added after this one
                 if not is_last and not i[1]:
                     separator = self.middle_separator.copy()
@@ -1701,7 +1701,7 @@ class LineProxyList(ProxyList):
         for position, i in enumerate(self.data):
             log("[%s] %s", position, i)
 
-            if might_need_separator and i[0].type != "endl" and (
+            if might_need_separator and i[0].type not in ("endl", "comment") and (
                         not previous or previous.type != "endl") and not isinstance(previous, CodeBlockNode):
                 log(">> Previous line has content and current needs to be indented, append separator to indent it")
                 expected_list.append(generate_separator())
