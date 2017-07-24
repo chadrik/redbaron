@@ -510,7 +510,7 @@ def test_dont_add_newlines_after_import():
     assert red.dumps() == "import a\n\nimport b\n\npouet\nplop\n"
 
 
-def test_insert_line_in_def_with_comments():
+def test_synchronize_def_with_comments():
     red = RedBaron("""\
 class A:
     def a(self, a):
@@ -523,4 +523,30 @@ class A:
 class A:
     def a(self, a):
         foo = True  # so true!
+""")
+
+
+def test_insert_line_in_def_with_comments():
+    red = RedBaron("""\
+class A:
+    def a(self, a):
+        pass
+
+    # leading comment
+
+    def b(self):
+        pass
+""")
+
+    red.def_._synchronise()
+
+    assert_with_indent(red, """\
+class A:
+    def a(self, a):
+        pass
+
+    # leading comment
+
+    def b(self):
+        pass
 """)
